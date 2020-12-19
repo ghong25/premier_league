@@ -1,2 +1,2 @@
 # premier_league
-Premier League
+Fantasy Premier League
