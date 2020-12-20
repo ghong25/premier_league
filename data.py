@@ -5,9 +5,6 @@ import sqlalchemy
 import numpy as np
 import os
 
-os.environ['db_endpoint'] = 'postgresql://postgres:postgres@fpl.c5aqdxmdgobi.us-east-1.rds.amazonaws.com:5432/postgres'
-
-endpoint = 'postgresql://postgres:postgres@fpl.c5aqdxmdgobi.us-east-1.rds.amazonaws.com:5432/postgres'
 engine = create_engine(endpoint)
 
 url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
