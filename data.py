@@ -5,34 +5,41 @@ import sqlalchemy
 import numpy as np
 import os
 
-<<<<<<< HEAD
-
+os.environ['PREMDB'] = 'postgresql://postgres:postgres@fpl.c5aqdxmdgobi.us-east-1.rds.amazonaws.com:5432/postgres'
 endpoint = os.environ.get('PREMDB')
-=======
->>>>>>> f332729bdbdce08457545c26742abfdd71dabd25
 engine = create_engine(endpoint)
 
 
-
-"""
 url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
 r_json = requests.get(url).json()
-# print(r['events'][1])
 
 # load up elements key into player df
 player_df = pd.DataFrame(r_json['elements'])
-# take only useful columns and filter rest out
+# set id as the index
+
 player_df = player_df.set_index('id')
-#player_df = player_df[['id', 'second_name', 'team', 'element_type', 'form', 'points_per_game', 'selected_by_percent', 'now_cost', 'minutes',
-#                       'transfers_in', 'value_season', 'total_points']]
+# take only useful columns and filter rest out
 
-#player_df = player_df[['now_cost', 'value_season']]
+player_df = player_df[['second_name', 'team', 'element_type', 'form', 'points_per_game', 'selected_by_percent',
+                       'now_cost', 'minutes', 'transfers_in', 'transfers_out',  'value_season', 'total_points',
+                       'goals_scored', 'assists', 'clean_sheets']]
 
+
+# first drop the players table if it exists
+sql = "DROP TABLE IF EXISTS players;"
+
+print(engine.execute(sql))
+# cast certain columns to decimal rather than text
+sql_type = {'second_name': sqlalchemy.types.Text(), 'team': sqlalchemy.Integer, 'element_type': sqlalchemy.Integer,
+            'form': sqlalchemy.DECIMAL, 'points_per_game': sqlalchemy.DECIMAL, 'selected_by_percent': sqlalchemy.DECIMAL,
+            'now_cost': sqlalchemy.Integer, 'minutes': sqlalchemy.Integer, 'transfers_in': sqlalchemy.Integer,
+            'transfers_out': sqlalchemy.Integer, 'value_season': sqlalchemy.DECIMAL, 'total_points': sqlalchemy.Integer,
+            'goals_scored': sqlalchemy.Integer, 'assists': sqlalchemy.Integer, 'clean_sheets': sqlalchemy.Integer
+            }
+
+player_df.to_sql('players', con=engine, dtype=sql_type)
+
+# selected by % should be float
 print(player_df.head())
-
-"""
-# Insert the player df into AWS RDS Postgres
-# player_df.to_sql('players', con=engine)
-
-sql = "SELECT * FROM players ORDER BY selected_by_percent DESC LIMIT 10;"
+sql = "SELECT * FROM players;"
 print(engine.execute(sqlalchemy.text(sql)).fetchall())
