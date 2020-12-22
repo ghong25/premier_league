@@ -20,7 +20,7 @@ player_df = pd.DataFrame(r_json['elements'])
 player_df = player_df.set_index('id')
 # take only useful columns and filter rest out
 
-player_df = player_df[['second_name', 'team', 'element_type', 'form', 'points_per_game', 'selected_by_percent',
+player_df = player_df[['web_name', 'team', 'element_type', 'form', 'points_per_game', 'selected_by_percent',
                        'now_cost', 'minutes', 'transfers_in', 'transfers_out',  'value_season', 'total_points',
                        'goals_scored', 'assists', 'clean_sheets']]
 
@@ -30,7 +30,7 @@ sql = "DROP TABLE IF EXISTS players;"
 
 print(engine.execute(sql))
 # cast certain columns to decimal rather than text
-sql_type = {'second_name': sqlalchemy.types.Text(), 'team': sqlalchemy.Integer, 'element_type': sqlalchemy.Integer,
+sql_type = {'web_name': sqlalchemy.types.Text(), 'team': sqlalchemy.Integer, 'element_type': sqlalchemy.Integer,
             'form': sqlalchemy.DECIMAL, 'points_per_game': sqlalchemy.DECIMAL, 'selected_by_percent': sqlalchemy.DECIMAL,
             'now_cost': sqlalchemy.Integer, 'minutes': sqlalchemy.Integer, 'transfers_in': sqlalchemy.Integer,
             'transfers_out': sqlalchemy.Integer, 'value_season': sqlalchemy.DECIMAL, 'total_points': sqlalchemy.Integer,
